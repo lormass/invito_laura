@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ciao Laura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ============ PALETTE ROSA / MALVA ============ */
+  :root{
+    --bg-1:#2a1230;
+    --bg-2:#451a41;
+    --bg-3:#6d2350;
+    --pink:#ff7eb6;
+    --pink-soft:#ffb3d1;
+    --pink-glow:#ff5c9e;
+    --peach:#ffb99a;
+    --lilac:#c98bd6;
+    --cream:#fff2f7;
+    --ink:#3a1030;
+    --muted:#e0b8cf;
+    --glass:rgba(255,255,255,0.07);
+    --glass-2:rgba(255,255,255,0.12);
+    --glass-border:rgba(255,255,255,0.18);
+    --shadow:0 24px 70px rgba(60,8,45,.5);
+    --r:26px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+    color:var(--cream);
+    background:
+      radial-gradient(120% 90% at 50% -10%, #7a2a63 0%, transparent 55%),
+      radial-gradient(90% 70% at 12% 108%, #b83f7a 0%, transparent 50%),
+      radial-gradient(90% 70% at 90% 100%, #6e2f8f 0%, transparent 52%),
+      linear-gradient(160deg,var(--bg-1),var(--bg-2) 60%,var(--bg-3));
+    background-attachment:fixed;
+    min-height:100dvh;overflow-x:hidden;position:relative;
+  }
+
+  /* petali fluttuanti */
+  .petals{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+  .petal{
+    position:absolute;top:-40px;font-size:16px;opacity:0;
+    animation:fall linear infinite;
+    will-change:transform;
+  }
+  @keyframes fall{
+    0%{transform:translateY(-40px) rotate(0deg);opacity:0;}
+    10%{opacity:.8;}
+    90%{opacity:.8;}
+    100%{transform:translateY(105vh) rotate(360deg);opacity:0;}
+  }
+
+  /* glow pulsante di sfondo */
+  .glow{
+    position:fixed;width:340px;height:340px;border-radius:50%;
+    background:radial-gradient(circle,var(--pink-glow),transparent 70%);
+    filter:blur(40px);opacity:.28;z-index:0;pointer-events:none;
+    animation:breathe 7s ease-in-out infinite;
+  }
+  .glow.g1{top:-80px;left:-60px;}
+  .glow.g2{bottom:-90px;right:-70px;background:radial-gradient(circle,var(--lilac),transparent 70%);animation-delay:-3s;}
+  @keyframes breathe{0%,100%{transform:scale(1);opacity:.22;}50%{transform:scale(1.25);opacity:.4;}}
+
+  .wrap{
+    position:relative;z-index:2;min-height:100dvh;
+    display:flex;align-items:center;justify-content:center;
+    padding:24px 18px calc(24px + env(safe-area-inset-bottom));
+  }
+  .card{
+    width:100%;max-width:450px;
+    background:linear-gradient(160deg, rgba(255,255,255,.13), rgba(255,255,255,.04));
+    border:1px solid var(--glass-border);
+    border-radius:var(--r);box-shadow:var(--shadow);
+    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    padding:36px 26px 30px;position:relative;overflow:hidden;
+    animation:cardIn .7s cubic-bezier(.2,.85,.2,1) both;
+  }
+  @keyframes cardIn{from{opacity:0;transform:translateY(26px) scale(.97);}to{opacity:1;transform:none;}}
+  .card::before{
+    content:"";position:absolute;inset:0;border-radius:var(--r);
+    background:linear-gradient(160deg, rgba(255,126,182,.16), transparent 42%);pointer-events:none;
+  }
+  /* bordo shimmer */
+  .card::after{
+    content:"";position:absolute;inset:-1px;border-radius:var(--r);padding:1px;
+    background:linear-gradient(130deg,var(--pink),transparent 30%,transparent 70%,var(--lilac));
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;
+    opacity:.5;pointer-events:none;
+  }
+
+  .step{animation:rise .5s cubic-bezier(.2,.8,.2,1) both;position:relative;z-index:1;}
+  @keyframes rise{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+  .hidden{display:none;}
+
+  .eyebrow{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:.76rem;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--pink-soft);font-weight:600;margin:0 0 14px;
+    animation:fadeSlide .6s .1s both;
+  }
+  @keyframes fadeSlide{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:none;}}
+
+  h1{
+    font-family:'Space Grotesk',sans-serif;font-weight:700;
+    font-size:2.25rem;line-height:1.1;margin:0 0 10px;letter-spacing:-.02em;
+  }
+  h1 .name{
+    background:linear-gradient(120deg,var(--pink),var(--peach));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .sub{
+    font-family:'Space Grotesk',sans-serif;font-size:1.55rem;line-height:1.25;
+    font-weight:500;margin:16px 0 28px;color:#fff;
+  }
+  .q-label{
+    font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:600;
+    margin:0 0 20px;color:#fff;letter-spacing:-.01em;
+  }
+
+  .btn{
+    border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;
+    font-weight:700;font-size:1.05rem;padding:15px 30px;border-radius:100px;
+    transition:transform .18s ease, box-shadow .25s ease, background .25s;
+    touch-action:manipulation;
+  }
+  .yesno{display:flex;gap:14px;align-items:center;flex-wrap:wrap;}
+  .btn-yes{
+    background:linear-gradient(135deg,var(--pink-glow),var(--peach));
+    color:#4a0f30;box-shadow:0 12px 30px rgba(255,92,158,.45);
+    flex:1;min-width:130px;position:relative;overflow:hidden;
+    animation:pulseGlow 2.4s ease-in-out infinite;
+  }
+  @keyframes pulseGlow{0%,100%{box-shadow:0 12px 30px rgba(255,92,158,.4);}50%{box-shadow:0 12px 40px rgba(255,92,158,.7);}}
+  .btn-yes:active{transform:scale(.96);}
+  .btn-no{
+    background:transparent;color:var(--muted);border:1px solid var(--glass-border);
+  }
+
+  .field{margin:0 0 20px;}
+  .field label{
+    display:block;font-size:.8rem;letter-spacing:.06em;color:var(--muted);
+    margin:0 0 9px;font-weight:700;text-transform:uppercase;
+    font-family:'Space Grotesk',sans-serif;
+  }
+  input[type="time"],select{
+    width:100%;appearance:none;-webkit-appearance:none;
+    font-family:'Plus Jakarta Sans',sans-serif;font-size:1.05rem;font-weight:600;
+    color:var(--cream);background:var(--glass);border:1px solid var(--glass-border);
+    border-radius:16px;padding:15px 16px;outline:none;transition:border .2s,background .2s;
+  }
+  input[type="time"]:focus,select:focus{border-color:var(--pink);background:rgba(255,255,255,.12);}
+  input[type="time"]::-webkit-calendar-picker-indicator{
+    filter:invert(70%) sepia(40%) saturate(1200%) hue-rotate(300deg);cursor:pointer;
+  }
+  select{
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%23ff7eb6' stroke-width='2'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 16px center;padding-right:44px;
+  }
+  .hint{font-size:.82rem;color:var(--muted);margin:9px 2px 0;}
+
+  /* ====== CALENDARIO CUSTOM ====== */
+  .cal{
+    background:var(--glass);border:1px solid var(--glass-border);
+    border-radius:20px;padding:16px 14px 18px;margin-bottom:4px;
+  }
+  .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .cal-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:1.05rem;color:#fff;text-transform:capitalize;}
+  .cal-nav{
+    width:38px;height:38px;border-radius:12px;border:1px solid var(--glass-border);
+    background:var(--glass);color:var(--pink-soft);font-size:1.1rem;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;transition:all .18s;
+  }
+  .cal-nav:hover{background:var(--glass-2);color:#fff;transform:scale(1.05);}
+  .cal-nav:disabled{opacity:.3;cursor:not-allowed;transform:none;}
+  .cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px;}
+  .cal-dow span{text-align:center;font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+  .cal-day{
+    aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+    border-radius:12px;font-weight:600;font-size:.95rem;cursor:pointer;
+    color:var(--cream);background:transparent;border:1px solid transparent;
+    transition:transform .14s, background .18s, box-shadow .2s;user-select:none;
+  }
+  .cal-day.empty{cursor:default;}
+  .cal-day.disabled{color:rgba(255,255,255,.22);cursor:not-allowed;}
+  .cal-day.today{border-color:var(--glass-border);}
+  .cal-day:not(.disabled):not(.empty):active{transform:scale(.9);}
+  .cal-day.sel{
+    background:linear-gradient(135deg,var(--pink-glow),var(--peach));
+    color:#4a0f30;font-weight:800;box-shadow:0 8px 20px rgba(255,92,158,.5);
+    transform:scale(1.05);animation:pop .3s ease;
+  }
+  @keyframes pop{0%{transform:scale(.7);}60%{transform:scale(1.15);}100%{transform:scale(1.05);}}
+
+  .food-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:4px 0 8px;}
+  .food{
+    cursor:pointer;border:1px solid var(--glass-border);background:var(--glass);
+    border-radius:18px;padding:16px 12px;text-align:center;
+    transition:transform .15s,border .2s,background .2s,box-shadow .2s;
+    display:flex;flex-direction:column;gap:6px;align-items:center;user-select:none;
+    animation:foodIn .45s both;
+  }
+  @keyframes foodIn{from{opacity:0;transform:translateY(12px) scale(.95);}to{opacity:1;transform:none;}}
+  .food .emoji{font-size:1.9rem;line-height:1;transition:transform .2s;}
+  .food:hover .emoji{transform:scale(1.15) rotate(-6deg);}
+  .food .name{font-weight:700;font-size:.96rem;color:var(--cream);}
+  .food:active{transform:scale(.95);}
+  .food.sel{
+    border-color:var(--pink);
+    background:linear-gradient(135deg,rgba(255,92,158,.28),rgba(255,185,154,.2));
+    box-shadow:0 10px 26px rgba(255,92,158,.3);
+  }
+  .food.sel .emoji{transform:scale(1.2);}
+
+  .nav{display:flex;gap:12px;margin-top:26px;}
+  .btn-next{
+    flex:1;background:linear-gradient(135deg,var(--pink-glow),var(--peach));
+    color:#4a0f30;box-shadow:0 12px 30px rgba(255,92,158,.4);
+  }
+  .btn-next:active{transform:scale(.97);}
+  .btn-next:disabled{opacity:.4;filter:grayscale(.4);cursor:not-allowed;box-shadow:none;}
+  .btn-back{background:transparent;color:var(--muted);border:1px solid var(--glass-border);padding:15px 22px;}
+  .btn-back:hover{color:var(--cream);}
+
+  .dots{display:flex;gap:7px;justify-content:center;margin:0 0 22px;}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--glass-border);transition:all .35s;}
+  .dot.on{background:linear-gradient(90deg,var(--pink),var(--peach));width:24px;border-radius:6px;}
+
+  .recap-row{
+    display:flex;justify-content:space-between;align-items:center;gap:14px;
+    padding:15px 0;border-bottom:1px solid var(--glass-border);
+    animation:rowIn .5s both;
+  }
+  .recap-row:nth-child(2){animation-delay:.08s;}
+  .recap-row:nth-child(3){animation-delay:.16s;}
+  @keyframes rowIn{from{opacity:0;transform:translateX(-10px);}to{opacity:1;transform:none;}}
+  .recap-row:last-of-type{border-bottom:none;}
+  .recap-row .k{color:var(--muted);font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-family:'Space Grotesk',sans-serif;}
+  .recap-row .v{font-family:'Space Grotesk',sans-serif;font-size:1.12rem;color:#fff;font-weight:600;text-align:right;}
+
+  .heart{font-size:3.4rem;text-align:center;margin:6px 0 4px;animation:beat 1.3s ease-in-out infinite;}
+  @keyframes beat{0%,100%{transform:scale(1);}25%{transform:scale(1.22);}40%{transform:scale(1.05);}60%{transform:scale(1.22);}}
+  .final-msg{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;text-align:center;line-height:1.35;margin:8px 0 24px;color:#fff;font-weight:600;}
+  .btn-send{
+    width:100%;text-align:center;text-decoration:none;display:block;
+    background:linear-gradient(135deg,#25D366,#1ebe5b);color:#053d1c;
+    font-weight:700;font-size:1.08rem;padding:17px;border-radius:100px;
+    box-shadow:0 14px 34px rgba(37,211,102,.4);transition:transform .18s;
+  }
+  .btn-send:active{transform:scale(.98);}
+  .send-hint{text-align:center;color:var(--muted);font-size:.82rem;margin-top:14px;line-height:1.55;}
+
+  @media (max-width:360px){
+    h1{font-size:1.9rem;}.sub{font-size:1.35rem;}.food .emoji{font-size:1.65rem;}
+    .cal-day{font-size:.85rem;}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="glow g1"></div>
+<div class="glow g2"></div>
+<div class="petals" id="petals"></div>
+
+<div class="wrap">
+  <div class="card">
+
+    <!-- STEP 0 -->
+    <section class="step" id="s-invite">
+      <p class="eyebrow">Un invito speciale</p>
+      <h1>Ciao <span class="name">Laura</span>,<br>come stai?</h1>
+      <p class="sub">Vuoi uscire con me?</p>
+      <div class="yesno">
+        <button class="btn btn-yes" id="btnYes">Sì 💖</button>
+        <button class="btn btn-no" id="btnNo">No</button>
+      </div>
+    </section>
+
+    <!-- STEP 1 -->
+    <section class="step hidden" id="s-when">
+      <div class="dots"><span class="dot on"></span><span class="dot"></span><span class="dot"></span></div>
+      <p class="q-label">Che giorno sei libera?</p>
+      <div class="cal" id="cal">
+        <div class="cal-head">
+          <button class="cal-nav" id="calPrev" aria-label="Mese precedente">‹</button>
+          <div class="cal-title" id="calTitle"></div>
+          <button class="cal-nav" id="calNext" aria-label="Mese successivo">›</button>
+        </div>
+        <div class="cal-dow"><span>lun</span><span>mar</span><span>mer</span><span>gio</span><span>ven</span><span>sab</span><span>dom</span></div>
+        <div class="cal-grid" id="calGrid"></div>
+      </div>
+      <div class="field" style="margin-top:20px;">
+        <label for="time">A che ora?</label>
+        <input type="time" id="time" min="19:00" max="23:59" step="900" value="19:30">
+        <p class="hint">Dalle 19:00 in poi — prima non posso 😅</p>
+      </div>
+      <div class="nav"><button class="btn btn-next" id="toFood" disabled>Avanti</button></div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="step hidden" id="s-food">
+      <div class="dots"><span class="dot"></span><span class="dot on"></span><span class="dot"></span></div>
+      <p class="q-label">Cosa ti va di mangiare?</p>
+      <div class="food-grid" id="foodGrid"></div>
+      <div class="nav">
+        <button class="btn btn-back" id="backWhen">Indietro</button>
+        <button class="btn btn-next" id="toRecap" disabled>Avanti</button>
+      </div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="step hidden" id="s-recap">
+      <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot on"></span></div>
+      <p class="q-label">Ci siamo! Ecco il piano</p>
+      <div id="recap"></div>
+      <div class="nav">
+        <button class="btn btn-back" id="backFood">Indietro</button>
+        <button class="btn btn-next" id="doSend">Invia 💌</button>
+      </div>
+    </section>
+
+    <!-- STEP 4 -->
+    <section class="step hidden" id="s-done">
+      <div class="heart">💖</div>
+      <p class="final-msg">Perfetto Laura,<br>non vedo l'ora!</p>
+      <a class="btn-send" id="waLink" href="#" target="_blank" rel="noopener">Conferma su WhatsApp</a>
+      <p class="send-hint">Tocca il pulsante per farmi arrivare la tua risposta.<br>Si aprirà WhatsApp con il messaggio già pronto 💫</p>
+    </section>
+
+  </div>
+</div>
+
+<script>
+  /* ============================================================
+     >>> METTI QUI IL TUO NUMERO WHATSAPP <<<
+     Prefisso senza "+" e senza spazi. Italia = 39 + numero.
+     Esempio: "393331234567"
+     ============================================================ */
+  const WHATSAPP_NUMBER = "39XXXXXXXXXX";
+
+  // petali
+  (function(){
+    const box=document.getElementById('petals');
+    const emojis=['🌸','💗','🌷','✨','💕'];
+    const n=window.innerWidth<420?14:20;
+    for(let i=0;i<n;i++){
+      const p=document.createElement('div');
+      p.className='petal';
+      p.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+      p.style.left=Math.random()*100+'%';
+      p.style.fontSize=(Math.random()*12+12)+'px';
+      const dur=Math.random()*8+7;
+      p.style.animationDuration=dur+'s';
+      p.style.animationDelay=(-Math.random()*dur)+'s';
+      box.appendChild(p);
+    }
+  })();
+
+  const data={day:'',time:'19:30',food:'',foodEmoji:''};
+
+  // No che scappa
+  const btnNo=document.getElementById('btnNo');
+  function runAway(){
+    const pad=20,w=window.innerWidth,h=window.innerHeight;
+    const bw=btnNo.offsetWidth,bh=btnNo.offsetHeight;
+    btnNo.style.position='fixed';
+    btnNo.style.left=(Math.random()*(w-bw-pad*2)+pad)+'px';
+    btnNo.style.top=(Math.random()*(h-bh-pad*2)+pad)+'px';
+    const cur=parseFloat(btnNo.dataset.scale||'1');
+    const next=Math.max(cur-0.12,0.4);
+    btnNo.dataset.scale=next;btnNo.style.transform='scale('+next+')';
+  }
+  btnNo.addEventListener('mouseenter',runAway);
+  btnNo.addEventListener('touchstart',e=>{e.preventDefault();runAway();},{passive:false});
+  btnNo.addEventListener('click',e=>{e.preventDefault();runAway();});
+
+  function show(id){
+    document.querySelectorAll('.step').forEach(s=>s.classList.add('hidden'));
+    const el=document.getElementById(id);
+    el.classList.remove('hidden');
+    el.classList.remove('step');void el.offsetWidth;el.classList.add('step');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.getElementById('btnYes').addEventListener('click',()=>show('s-when'));
+
+  // ===== CALENDARIO CUSTOM =====
+  const monthsIT=['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
+  const daysIT=['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'];
+  const today=new Date();today.setHours(0,0,0,0);
+  let viewY=today.getFullYear(), viewM=today.getMonth();
+  let selDate=null;
+  const calTitle=document.getElementById('calTitle');
+  const calGrid=document.getElementById('calGrid');
+  const calPrev=document.getElementById('calPrev');
+  const toFood=document.getElementById('toFood');
+
+  function sameDay(a,b){return a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
+
+  function renderCal(){
+    calTitle.textContent=monthsIT[viewM]+' '+viewY;
+    calGrid.innerHTML='';
+    // lun=0 ... dom=6
+    let first=new Date(viewY,viewM,1).getDay();
+    first=(first+6)%7;
+    const daysInMonth=new Date(viewY,viewM+1,0).getDate();
+    for(let i=0;i<first;i++){
+      const e=document.createElement('div');e.className='cal-day empty';calGrid.appendChild(e);
+    }
+    for(let d=1;d<=daysInMonth;d++){
+      const cell=document.createElement('div');
+      cell.className='cal-day';
+      cell.textContent=d;
+      const thisDate=new Date(viewY,viewM,d);
+      if(thisDate<today){cell.classList.add('disabled');}
+      if(sameDay(thisDate,today)){cell.classList.add('today');}
+      if(sameDay(thisDate,selDate)){cell.classList.add('sel');}
+      if(thisDate>=today){
+        cell.addEventListener('click',()=>{
+          selDate=thisDate;
+          data.day=`${viewY}-${String(viewM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+          renderCal();toFood.disabled=false;
+        });
+      }
+      calGrid.appendChild(cell);
+    }
+    // disabilita "prev" se siamo nel mese corrente
+    calPrev.disabled=(viewY===today.getFullYear()&&viewM===today.getMonth());
+  }
+  calPrev.addEventListener('click',()=>{
+    if(calPrev.disabled)return;
+    viewM--;if(viewM<0){viewM=11;viewY--;}renderCal();
+  });
+  document.getElementById('calNext').addEventListener('click',()=>{
+    viewM++;if(viewM>11){viewM=0;viewY++;}renderCal();
+  });
+  renderCal();
+
+  const timeEl=document.getElementById('time');
+  timeEl.addEventListener('change',()=>{if(timeEl.value&&timeEl.value<"19:00")timeEl.value="19:00";});
+  toFood.addEventListener('click',()=>{
+    data.time=(timeEl.value&&timeEl.value>="19:00")?timeEl.value:"19:00";
+    show('s-food');
+  });
+
+  // ===== CIBO =====
+  const foods=[
+    {emoji:'🍕',name:'Pizza'},{emoji:'🍣',name:'Sushi'},
+    {emoji:'🍝',name:'Pasta'},{emoji:'🍔',name:'Burger'},
+    {emoji:'🌮',name:'Messicano'},{emoji:'🥩',name:'Carne'},
+    {emoji:'🥗',name:'Poke / Insalatona'},{emoji:'🍦',name:'Solo un gelato 😄'},
+  ];
+  const grid=document.getElementById('foodGrid');
+  const toRecap=document.getElementById('toRecap');
+  foods.forEach((f,i)=>{
+    const d=document.createElement('div');
+    d.className='food';d.style.animationDelay=(i*0.05)+'s';
+    d.innerHTML=`<span class="emoji">${f.emoji}</span><span class="name">${f.name}</span>`;
+    d.addEventListener('click',()=>{
+      document.querySelectorAll('.food').forEach(x=>x.classList.remove('sel'));
+      d.classList.add('sel');data.food=f.name;data.foodEmoji=f.emoji;toRecap.disabled=false;
+    });
+    grid.appendChild(d);
+  });
+  document.getElementById('backWhen').addEventListener('click',()=>show('s-when'));
+  toRecap.addEventListener('click',()=>{buildRecap();show('s-recap');});
+
+  function itDate(iso){
+    if(!iso)return '';
+    const [y,m,d]=iso.split('-');
+    const dt=new Date(+y,+m-1,+d);
+    return `${daysIT[dt.getDay()]} ${(+d)} ${monthsIT[+m-1]}`;
+  }
+  function buildRecap(){
+    document.getElementById('recap').innerHTML=`
+      <div class="recap-row"><span class="k">Giorno</span><span class="v">${itDate(data.day)}</span></div>
+      <div class="recap-row"><span class="k">Ora</span><span class="v">${data.time}</span></div>
+      <div class="recap-row"><span class="k">Da mangiare</span><span class="v">${data.foodEmoji} ${data.food}</span></div>`;
+  }
+  document.getElementById('backFood').addEventListener('click',()=>show('s-food'));
+
+  document.getElementById('doSend').addEventListener('click',()=>{
+    const msg=`Ciao! 💖 Ho detto SÌ 🎉
+
+Ecco il nostro piano:
+📅 ${itDate(data.day)}
+🕖 ${data.time}
+🍽️ ${data.foodEmoji} ${data.food}
+
+Non vedo l'ora! — Laura`;
+    document.getElementById('waLink').setAttribute('href',`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
+    show('s-done');
+  });
+</script>
+</body>
+</html>
